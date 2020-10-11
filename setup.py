@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from setuptools import setup, find_packages
 
 setup(
@@ -9,6 +9,6 @@ setup(
     long_description=open('README.md').read(),
     author='Ben Sadeghipour',
     url='https://github.com/nahamsec/JSParser',
-    install_requires=['safeurl', 'tornado', 'jsbeautifier',
+    install_requires=['safeurl', 'tornado<=5.1', 'jsbeautifier',
                       'netaddr', 'pycurl', 'BeautifulSoup4'],
 )

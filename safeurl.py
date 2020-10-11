@@ -12,21 +12,13 @@ from __future__ import print_function
 from numbers import Number
 from socket import gethostbyname_ex
 
+from io import BytesIO
+from urllib.parse import quote
+from urllib.parse import urlparse
+
 import re
-import netaddr
 import pycurl
-import StringIO
-
-# Python 2.7/3 urlparse
-try:
-    # Python 2.7
-    from urlparse import urlparse
-    from urllib import quote
-except:
-    # Python 3
-    from urllib.parse import urlparse
-    from urllib.parse import quote
-
+import netaddr
 
 class InvalidOptionException(Exception):
     pass
@@ -682,6 +674,7 @@ class SafeURL(object):
 
         while True:
             # Validate the URL
+            print(url)
             url = Url.validateUrl(url, self._options)
 
             # Are there credentials, but we don"t want to send them?
@@ -707,7 +700,7 @@ class SafeURL(object):
                 self._handle.setopt(pycurl.URL, url["cleanUrl"])
 
             # Execute the cURL request
-            response = StringIO.StringIO()
+            response = BytesIO()
             self._handle.setopt(pycurl.WRITEFUNCTION, response.write)
             self._handle.perform()
 

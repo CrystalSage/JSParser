@@ -2,13 +2,14 @@ from __future__ import print_function
 import tornado.ioloop, tornado.web, tornado.autoreload
 from tornado.escape import json_encode, json_decode
 
-import safeurl, types, sys, re, mimetypes, glob, jsbeautifier, urlparse, pycurl
+import safeurl, types, sys, re, mimetypes, glob, jsbeautifier, pycurl
+from urllib.parse import urlparse
 import calendar, time, datetime
 
 from netaddr import *
 from collections import defaultdict
 from bs4 import BeautifulSoup
-from cgi import escape
+from html import escape
 
 #------------------------------------------------------------
 # Base / Status Code Handlers
@@ -117,7 +118,7 @@ class ViewParseAjaxHandler(BaseHandler):
         return output
         
     def beautifyJS(self, content):
-        return jsbeautifier.beautify(content)
+        return jsbeautifier.beautify(content.decode())
 
     def isLongLine(self, line):
         if len(line)>1000:
@@ -246,7 +247,10 @@ application = tornado.web.Application(
 )
 
 if __name__ == "__main__":
-    application.listen(portNum)
-    tornado.ioloop.IOLoop.current().start()
-
-
+    try:
+        print(f"Cool! Now check http://localhost:{portNum}")
+        application.listen(portNum)
+        tornado.ioloop.IOLoop.current().start()
+    except KeyboardInterrupt:
+        print("\n######Stopping the listener#####")
+        sys.exit(0)
