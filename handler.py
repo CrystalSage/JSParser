@@ -8,8 +8,10 @@ import calendar, time, datetime
 
 from netaddr import *
 from collections import defaultdict
+from ast import literal_eval
 from bs4 import BeautifulSoup
 from html import escape
+import argparse
 
 #------------------------------------------------------------
 # Base / Status Code Handlers
@@ -134,7 +136,7 @@ class ViewParseAjaxHandler(BaseHandler):
         
         # parse all the links out
         parsedLinks = self.parseForLinks(prettyContent)
-        
+   
         # if we have results, start building HTML
         if parsedLinks:
             print("Discovered {} links in {}".format(len(parsedLinks), url))
@@ -215,9 +217,10 @@ class ViewParseAjaxHandler(BaseHandler):
 #------------------------------------------------------------
 # Main
 #------------------------------------------------------------
+parser = argparse.ArgumentParser(description ='JSparser')
+parser.add_argument("--port",default=8080, help= "port to run the server on")
 
-
-portNum = int(sys.argv[sys.argv.index("-p")+1]) if "-p" in sys.argv else 8008
+args = parser.parse_args()
 
 # Application Settings
 settings = {
@@ -247,9 +250,10 @@ application = tornado.web.Application(
 )
 
 if __name__ == "__main__":
+
     try:
-        print(f"Cool! Now check http://localhost:{portNum}")
-        application.listen(portNum)
+        print(f"Cool! Now check http://localhost:{args.port}")
+        application.listen(args.port)
         tornado.ioloop.IOLoop.current().start()
     except KeyboardInterrupt:
         print("\n######Stopping the listener#####")
